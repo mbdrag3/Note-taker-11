@@ -1,0 +1,23 @@
+app.post("/api/notes", (req, res) => {
+
+    let note = req.body;
+    note["title"] = req.body.title;
+    note["text"] = req.body.text;
+
+    fs.readFile('./develop/db/db.json', 'utf8', (error, file) => {
+        if (error) throw error;
+
+        const parsedFile = JSON.parse(file);
+
+        parsedFile.push(note);
+
+        const newStringifiedFile = JSON.stringify(parsedFile);
+
+        fs.writeFile('./develop/db/db.json', newStringifiedFile, 'utf8', (err) => {
+            if (err) throw err;
+            console.log("The new note was appended to the file!");
+        });
+        
+        return res.send(JSON.parse(newStringifiedFile));
+    });    
+});
